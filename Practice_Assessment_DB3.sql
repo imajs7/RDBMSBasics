@@ -49,7 +49,10 @@ VALUES
 	("Sitting", 1200, 1488),
 	("Sitting", 1500, 1860);
  
- /* question 3 */
+ /* question 3 
+ How many females and how many male passengers travelled for a 
+ minimum distance of 600 KM s?
+ */
 SELECT
 	gender, count(*) AS	count
 FROM 
@@ -59,15 +62,19 @@ WHERE
 GROUP BY
 	gender;
     
-/* question 4 */
+/* question 4 
+Find the minimum ticket price for Sleeper Bus.
+*/
 SELECT
-	min(price) AS 'Min price of sleeper'
+	CONCAT('₹', min(price)) AS 'Min price of sleeper'
 FROM
 	price
 WHERE
 	bus_type = 'sleeper';
     
-/* question 5 */
+/* question 5 
+Select passenger names whose names start with character 'S'
+*/
 SELECT
 	passenger_name AS Name
 FROM
@@ -75,17 +82,25 @@ FROM
 WHERE
 	passenger_name LIKE 's%';
     
-/* question 6 */
+/* question 6 
+Calculate price charged for each passenger displaying Passenger name, 
+Boarding City, Destination City, Bus_Type, Price in the output
+*/
 SELECT
-	x.passenger_name AS Name, x.boarding_city AS Boarding, x.destination_city AS Destination, x.bus_type AS Bus_Type, y.price AS Price_Charged
+	x.passenger_name AS Name, x.boarding_city AS 'Boarding At', 
+    x.destination_city AS Destination, x.bus_type AS 'Bus Type', 
+    CONCAT('₹', y.price) AS 'Price Charged'
 FROM
 	passenger x, price y
 WHERE
 	x.bus_type = y.bus_type AND x.distance = y.distance;
     
-/* question 7 */
+/* question 7 
+What are the passenger name/s and his/her ticket price who travelled 
+in the Sitting bus for a distance of 1000 KM s
+*/
 SELECT
-	passenger_name AS Name, price AS Ticket_Price
+	passenger_name AS Name, CONCAT('₹', price) AS 'Ticket Price'
 FROM
 	passenger t1
 INNER JOIN
@@ -95,32 +110,46 @@ ON
 WHERE
     t1.distance = 1000 AND t1.bus_type = 'sitting';
     
-/* question 8 */
+/* question 8 
+What will be the Sitting and Sleeper bus charge for Pallavi to travel from 
+Bangalore to Panaji?
+*/
 SELECT
-	bus_type AS 'Bus Type', price AS Price
+	bus_type AS 'Bus Type', CONCAT('₹', price) AS 'Price (Blr to Panaji)'
 FROM
 	price
 WHERE
 	distance = 600;
     
-/* question 9 */
+/* question 9 
+List the distances from the "Passenger" table which are unique 
+(non-repeated distances) in descending order.
+*/
 SELECT
-	DISTINCT(distance) AS Distances
+	DISTINCT( CONCAT(distance, ' km')) AS 'Distances'
 FROM
 	passenger
 ORDER BY
 	distance DESC;
     
-/* question 10 */
+/* question 10 
+Display the passenger name and percentage of distance travelled by that passenger 
+from the total distance travelled by all passengers without using user variables
+*/
 SELECT
-	passenger_name AS Name, distance AS 'Distance (km)', 
-    distance * 100 / (SELECT sum(distance) FROM passenger) AS 'Distance (%)'
+	passenger_name AS Name, CONCAT(distance, ' km') AS 'Distance', 
+    CONCAT( ROUND(distance * 100 / (SELECT sum(distance) FROM passenger), 2), '%') AS 'Percentage'
 FROM
 	passenger;
     
-/* question 11 */
+/* question 11 
+Display the distance, price in three categories in table Price
+a) Expensive if the cost is more than 1000
+b) Average Cost if the cost is less than 1000 and greater than 500
+c) Cheap otherwise
+*/
 SELECT
-	distance, price,
+	CONCAT(distance, ' km') AS Distance, CONCAT('₹', price) AS Price,
 CASE
     WHEN price > 1000 THEN 'Expensive'
     WHEN price > 500 AND price <= 1000 THEN 'Average Cost'
